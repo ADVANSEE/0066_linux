@@ -1,0 +1,39 @@
+#
+# Makefile for the linux kernel.
+#
+
+# Object file lists.
+obj-y   := cpu.o mm.o system.o devices.o dummy_gpio.o irq.o bus_freq.o  usb_h2.o usb_h3.o\
+pm.o cpu_op-mx6.o mx6_wfi.o mx6_fec.o mx6_anatop_regulator.o cpu_regulator-mx6.o \
+mx6_mmdc.o mx6_ddr_freq.o mx6sl_ddr.o mx6sl_wfi.o etm.o
+
+obj-$(CONFIG_ARCH_MX6) += clock.o mx6_suspend.o clock_mx6sl.o
+obj-$(CONFIG_MACH_MX6_A) += board-mx6_a.o
+obj-$(CONFIG_MACH_MX6_H) += board-mx6_h.o
+obj-$(CONFIG_MACH_MX6Q_ARM2) += board-mx6q_arm2.o
+obj-$(CONFIG_MACH_MX6SL_ARM2) += board-mx6sl_arm2.o mx6sl_arm2_pmic_pfuze100.o
+obj-$(CONFIG_MACH_MX6SL_EVK) += board-mx6sl_evk.o mx6sl_evk_pmic_pfuze100.o
+obj-$(CONFIG_MACH_MX6Q_SABRELITE) += board-mx6q_sabrelite.o
+obj-$(CONFIG_MACH_MX6_BT) += board-mx6_bt.o
+obj-$(CONFIG_MACH_MX6_MTP) += board-mx6_mtp.o
+obj-$(CONFIG_MACH_MX6_NITROGEN6X) += board-mx6_nitrogen6x.o
+obj-$(CONFIG_MACH_MX6_NITROGEN6X_LVDS) += board-mx6_nitrogen6x_lvds.o
+obj-$(CONFIG_MACH_MX6_SABRE_INNOV) += board-mx6_Sabre_Innov.o
+obj-$(CONFIG_MACH_MX6_NITROGEN6_MAX) += board-mx6_nitrogen6_max.o
+obj-$(CONFIG_MACH_MX6_R) += board-mx6_r.o
+obj-$(CONFIG_MACH_MX6_UTC) += board-mx6_utc.o
+obj-$(CONFIG_MACH_MX6_S) += board-mx6_s.o
+obj-$(CONFIG_MACH_MX6_SP) += board-mx6_sp.o
+obj-$(CONFIG_MACH_MX6_MCS) += board-mx6_mcs.o
+obj-$(CONFIG_MACH_MX6_OC) += board-mx6_oc.o
+obj-$(CONFIG_MACH_MX6_NIT6XLITE) += board-mx6_nit6xlite.o
+obj-$(CONFIG_MACH_MX6Q_SABRESD) += board-mx6q_sabresd.o mx6q_sabresd_pmic_pfuze100.o
+obj-$(CONFIG_MACH_MX6Q_SABREAUTO) += board-mx6q_sabreauto.o mx6q_sabreauto_pmic_pfuze100.o
+obj-$(CONFIG_MACH_MX6Q_HDMIDONGLE) += board-mx6q_hdmidongle.o
+obj-$(CONFIG_SMP) += plat_hotplug.o platsmp.o headsmp.o
+obj-$(CONFIG_LOCAL_TIMERS) += localtimer.o
+obj-$(CONFIG_IMX_PCIE) += pcie.o
+obj-$(CONFIG_USB_FSL_ARC_OTG) += usb_dr.o
+obj-$(CONFIG_USB_EHCI_ARC_H1) += usb_h1.o
+obj-$(CONFIG_MACH_IMX_BLUETOOTH_RFKILL) += mx6_bt_rfkill.o
+obj-$(CONFIG_PCI_MSI) += msi.o
