@@ -103,7 +103,8 @@ static struct v4l2_output mxc_capture_outputs[MXC_V4L2_CAPTURE_NUM_OUTPUTS] = {
 static struct v4l2_input mxc_capture_inputs[MXC_V4L2_CAPTURE_NUM_INPUTS] = {
 	{
 	 .index = 0,
-	 .name = "CSI IC MEM",
+	 //.name = "CSI IC MEM",
+	 .name = "CSI MEM",
 	 .type = V4L2_INPUT_TYPE_CAMERA,
 	 .audioset = 0,
 	 .tuner = 0,
@@ -365,7 +366,9 @@ static inline int valid_mode(u32 palette)
 		(palette == V4L2_PIX_FMT_YUYV) ||
 		(palette == V4L2_PIX_FMT_YUV420) ||
 		(palette == V4L2_PIX_FMT_YVU420) ||
-		(palette == V4L2_PIX_FMT_NV12));
+		(palette == V4L2_PIX_FMT_NV12) ||
+		(palette == V4L2_PIX_FMT_GREY)
+		  );
 }
 
 /*!
@@ -888,6 +891,11 @@ static int mxc_v4l2_s_fmt(cam_data *cam, struct v4l2_format *f)
 			size = f->fmt.pix.width * f->fmt.pix.height * 3 / 2;
 			bytesperline = f->fmt.pix.width;
 			break;
+		case V4L2_PIX_FMT_GREY:
+			size =  f->fmt.pix.width * f->fmt.pix.height;
+			bytesperline = f->fmt.pix.width;
+			break;		  
+			
 		default:
 			break;
 		}
@@ -1209,6 +1217,15 @@ static int mxc_v4l2_s_ctrl(cam_data *cam, struct v4l2_control *c)
 		}
 		break;
 	case V4L2_CID_EXPOSURE:
+		if (cam->sensor) {
+			cam->ae_mode = c->value;
+			ret = vidioc_int_s_ctrl(cam->sensor, c);
+		} else {
+			pr_err("ERROR: v4l2 capture: slave not found!\n");
+			ret = -ENODEV;
+		}
+		break;
+	case V4L2_CID_GAIN:
 		if (cam->sensor) {
 			cam->ae_mode = c->value;
 			ret = vidioc_int_s_ctrl(cam->sensor, c);

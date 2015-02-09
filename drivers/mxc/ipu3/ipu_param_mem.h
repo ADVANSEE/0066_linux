@@ -448,6 +448,15 @@ static inline void _ipu_ch_param_init(struct ipu_soc *ipu, int ch,
 			ipu_ch_param_set_field(&params, 1, 78, 7, 31);	/* burst size */
 		}
 		break;
+	case IPU_PIX_FMT_GREY:
+		// Represents grey data 
+		// 37.4.2.10.1 CPMEM's words' structure 
+		ipu_ch_param_set_field(&params, 0, 107, 3, 5);	/* bits/pixel */
+		ipu_ch_param_set_field(&params, 1, 85, 4, 6);	/* pix format */
+		ipu_ch_param_set_field(&params, 1, 78, 7, 63);	/* burst size */
+		break;
+		
+		
 	default:
 		dev_err(ipu->dev, "mxc ipu: unimplemented pixel format\n");
 		break;

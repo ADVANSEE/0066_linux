@@ -75,7 +75,6 @@ static int mcp23008_write_reg(struct mcp23008_chip *chip, int reg, uint16_t val)
 {
 	int ret = 0;
 	
-	printk(KERN_ERR "mcp23008 write reg %d value %d\n", reg, val);
 	ret = i2c_smbus_write_byte_data(chip->client, reg, val);
 
 	if (ret < 0) {
@@ -97,7 +96,6 @@ static int mcp23008_read_reg(struct mcp23008_chip *chip, int reg, uint16_t *val)
 	}
 	
 	*val = (uint16_t)ret;
-	printk(KERN_ERR "mcp23008 read reg %d value %d\n", reg, *val);
 
 	return 0;
 }
@@ -302,10 +300,6 @@ static int __devinit mcp23008_probe(struct i2c_client *client,
 	struct mcp23008_chip *chip;
 	int ret = 0;
 	
-	
-	printk(KERN_ERR "mcp23008 probe\n");
-		
-
 	chip = kzalloc(sizeof(struct mcp23008_chip), GFP_KERNEL);
 	if (chip == NULL)
 	{

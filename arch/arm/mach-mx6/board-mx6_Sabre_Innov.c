@@ -978,6 +978,23 @@ static int mipi_ov7251_init(unsigned gpio)
 
 	pr_err("%s\n",__func__);
 
+
+	/* Camera test mode: default - off */
+	gpio_ov7251_test_mode = gpio + GPIO_OV7251_TEST_MODE;
+	ret = gpio_request(gpio_ov7251_test_mode, "ov7251_test_mode");
+	if (ret) {
+		pr_err("Error requesting ov7251_test_mode: %d\n", ret);
+		goto failed_request_mipi_ov7251_test_mode;
+	}
+	ret = gpio_direction_output(gpio_ov7251_test_mode, 0);
+	if (ret) {
+		pr_err("Error configuring direction for ov7251_test_mode: %d\n",
+			ret);
+		goto failed_direction_mipi_ov7251_test_mode;
+	}
+	// 
+	mdelay(50);
+
 	/* Camera reset: default - on */
 	gpio_ov7251_reset = gpio + GPIO_OV7251_RESET;
 	ret = gpio_request(gpio_ov7251_reset, "ov7251_reset_n");
@@ -992,19 +1009,7 @@ static int mipi_ov7251_init(unsigned gpio)
 		goto failed_direction_mipi_ov7251_reset_n;
 	}
 
-	/* Camera power: default - off */
-	gpio_ov7251_test_mode = gpio + GPIO_OV7251_TEST_MODE;
-	ret = gpio_request(gpio_ov7251_test_mode, "ov7251_test_mode");
-	if (ret) {
-		pr_err("Error requesting ov7251_test_mode: %d\n", ret);
-		goto failed_request_mipi_ov7251_test_mode;
-	}
-	ret = gpio_direction_output(gpio_ov7251_test_mode, 0);
-	if (ret) {
-		pr_err("Error configuring direction for ov7251_test_mode: %d\n",
-			ret);
-		goto failed_direction_mipi_ov7251_test_mode;
-	}
+	mdelay(50);
 
 	return 0;
 
@@ -1156,12 +1161,7 @@ static void ov7251_mipi_camera_io_init(void)
 
 static void ov7251_mipi_camera_powerdown(int powerdown)
 {
-	pr_info("%s: powerdown=%d, power_gp=0x%x\n",
-			__func__, powerdown, GP_MIPI_PWN);
-  
 	gpio_set_value_cansleep(gpio_ov7251_reset, powerdown ? 0 : 1);
-	//gpio_set_value_cansleep(gpio_ov7251_reset, powerdown ? 1 : 0);
-
 	msleep(20);
 }
 
@@ -2229,7 +2229,11 @@ static struct mipi_csi2_platform_data mipi_csi2_pdata = {
 	.csi_id = OV5640_MIPI_CSI,
 #endif
 	.v_channel = 0,
+#if defined(MIPI_INNOV)
+	.lanes = 1,
+#else
 	.lanes = 2,
+#endif
 	.dphy_clk = "mipi_pllref_clk",
 	.pixel_clk = "emi_clk",
 	.cfg_clk = "hdmi_isfr_clk",
